@@ -5,12 +5,12 @@
 set -e
 
 # config
-APACHE_VERSION="2.2.23"
+APACHE_VERSION="2.4.3"
 APACHE_PATH="apache"
-PHP_VERSION="5.3.17"
+PHP_VERSION="5.4.8"
 PHP_PATH="php"
-BUILDPACK_VERSION="1.2"
-
+BUILDPACK_VERSION="2.0-a3"
+OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/3769458a-2650-4189-a50f-f3bd9c685c75"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
@@ -34,7 +34,8 @@ fi
 
 BP_URL="https://s3.amazonaws.com/licorice-labs-buildpacks/apache-$APACHE_VERSION-php-$PHP_VERSION-v$BUILDPACK_VERSION.tar.gz"
 echo "-----> Bundling Apache $APACHE_VERSION PHP $PHP_VERSION build $BUILDPACK_VERSION"
-curl --silent --max-time 60 --location "$BP_URL" | tar xz
+# curl --silent --max-time 60 --location "$BP_URL" | tar xz
+curl --silent --max-time 60 --location "$OPT_BUILDPACK_URL" | tar xz
 
 # echo "-----> Extracting bsdiff binary"
 # tar xzf $LP_DIR/src/bsdiff.tgz
@@ -46,6 +47,7 @@ curl --silent --max-time 60 --location "$BP_URL" | tar xz
 # update config files
 cp $LP_DIR/conf/httpd.conf $APACHE_PATH/conf
 cp $LP_DIR/conf/php.ini php
+cp $LP_DIR/conf/php-fpm.conf $BUILD_DIR/php/etc/
 
 # make php available on bin
 mkdir -p bin
@@ -85,6 +87,9 @@ if [ -d www/.hooks ]; then
     fi
   done
 fi
+
+echo "Launching PHP FPM"
+/app/php/sbin/php-fpm -y /app/php/etc/php-fpm.conf -c /app/php/php.ini
 
 echo "Launching apache"
 exec /app/apache/bin/httpd -DNO_DETACH
