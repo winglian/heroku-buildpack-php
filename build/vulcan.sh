@@ -84,8 +84,9 @@ sed -e "s%/usr/local/apache2%/app/apache%" Makefile.AP2 > Makefile
 ${MAKE_CMD} && ${MAKE_CMD} install
 
 cd /tmp/php-5.4.8
-./configure --prefix=/app/php --with-apxs2=/app/apache/bin/apxs --with-mysql=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv --with-gd --with-curl=/usr/lib --with-config-file-path=/app/php --enable-soap=shared --with-openssl --enable-mbstring --with-mhash --enable-mysqlnd --with-pear --with-mysqli=mysqlnd --with-jpeg-dir --with-png-dir --with-mcrypt=/app/local --enable-static --enable-fpm --with-pcre-dir=/app/local
-${MAKE_CMD} && ${MAKE_CMD} install
+./configure --prefix=/app/php --with-mysql=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv --with-gd --with-curl=/usr/lib --with-config-file-path=/app/php --enable-soap=shared --with-openssl --enable-mbstring --with-mhash --enable-mysqlnd --with-pear --with-mysqli=mysqlnd --with-jpeg-dir --with-png-dir --with-mcrypt=/app/local --enable-static --enable-fpm --with-pcre-dir=/app/local --disable-cgi
+${MAKE_CMD}
+${MAKE_CMD} install
 
 /app/php/bin/pear config-set php_dir /app/php
 echo " " | /app/php/bin/pecl install memcache

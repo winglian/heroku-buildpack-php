@@ -9,8 +9,9 @@ APACHE_VERSION="2.4.3"
 APACHE_PATH="apache"
 PHP_VERSION="5.4.8"
 PHP_PATH="php"
-BUILDPACK_VERSION="2.0-a3"
-OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/3769458a-2650-4189-a50f-f3bd9c685c75"
+BUILDPACK_VERSION="2.0-a4"
+BP_URL="https://s3.amazonaws.com/licorice-labs-buildpacks/apache-$APACHE_VERSION-php-$PHP_VERSION-v$BUILDPACK_VERSION.tar.gz"
+OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/b8bace2a-2a8e-4441-acc3-eb8e6ad608a5"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
@@ -32,17 +33,9 @@ if [ -f www/Procfile ]; then
   mv www/Procfile .
 fi
 
-BP_URL="https://s3.amazonaws.com/licorice-labs-buildpacks/apache-$APACHE_VERSION-php-$PHP_VERSION-v$BUILDPACK_VERSION.tar.gz"
-echo "-----> Bundling Apache $APACHE_VERSION PHP $PHP_VERSION build $BUILDPACK_VERSION"
-# curl --silent --max-time 60 --location "$BP_URL" | tar xz
+echo "-----> Extracting Apache $APACHE_VERSION PHP $PHP_VERSION build $BUILDPACK_VERSION"
+echo "-----> from $OPT_BUILDPACK_URL"
 curl --silent --max-time 60 --location "$OPT_BUILDPACK_URL" | tar xz
-
-# echo "-----> Extracting bsdiff binary"
-# tar xzf $LP_DIR/src/bsdiff.tgz
-# echo "-----> Bundling Apache $APACHE_VERSION/PHP $PHP_VERSION build"
-# gunzip $LP_DIR/src/build.tgz
-# local/bin/bspatch $LP_DIR/src/build.tar $LP_DIR/src/build-apache-$APACHE_VERSION-php-$PHP_VERSION.tar $LP_DIR/src/build.bsdiff
-# tar xf $LP_DIR/src/build-apache-$APACHE_VERSION-php-$PHP_VERSION.tar
 
 # update config files
 cp $LP_DIR/conf/httpd.conf $APACHE_PATH/conf
