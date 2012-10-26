@@ -41,7 +41,7 @@ mkdir $BUILD_DIR/vendor/phantomjs
 cd $BUILD_DIR/vendor/phantomjs
 
 echo "-----> phantomhs install"
-curl "http://stomita-buildpack-phantomjs.s3.amazonaws.com/buildpack-phantomjs-1.7.0.tar.gz" | xz
+curl --silent --max-time 60 --location "http://stomita-buildpack-phantomjs.s3.amazonaws.com/buildpack-phantomjs-1.7.0.tar.gz" | tar xz
 
 cd $BUILD_DIR
 
