@@ -36,6 +36,15 @@ BP_URL="https://s3.amazonaws.com/licorice-labs-buildpacks/apache-$APACHE_VERSION
 echo "-----> Bundling Apache $APACHE_VERSION PHP $PHP_VERSION build $BUILDPACK_VERSION"
 curl --silent --max-time 60 --location "$BP_URL" | tar xz
 
+mkdir $BUILD_DIR/vendor
+mkdir $BUILD_DIR/vendor/phantomjs
+cd $BUILD_DIR/vendor/phantomjs
+
+echo "-----> phantomhs install"
+curl "http://stomita-buildpack-phantomjs.s3.amazonaws.com/buildpack-phantomjs-1.7.0.tar.gz" | xz
+
+cd $BUILD_DIR
+
 # echo "-----> Extracting bsdiff binary"
 # tar xzf $LP_DIR/src/bsdiff.tgz
 # echo "-----> Bundling Apache $APACHE_VERSION/PHP $PHP_VERSION build"
