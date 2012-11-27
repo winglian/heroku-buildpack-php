@@ -38,9 +38,13 @@ curl -L ${APACHE_MIRROR_HOST}/apr/apr-util-1.5.1.tar.gz -o /tmp/apr-util-1.5.1.t
 echo "downloading httpd"
 curl -L ${APACHE_MIRROR_HOST}/httpd/httpd-2.4.3.tar.gz -o /tmp/httpd-2.4.3.tar.gz
 echo "downloading php"
-curl -L http://us.php.net/get/php-5.4.8.tar.gz/from/us2.php.net/mirror -o /tmp/php-5.4.8.tar.gz
+curl -L http://us.php.net/get/php-5.4.9.tar.gz/from/us2.php.net/mirror -o /tmp/php-5.4.9.tar.gz
 echo "downloading pecl-memcached"
 curl -L http://pecl.php.net/get/memcached-2.1.0.tgz -o /tmp/memcached-2.1.0.tgz
+echo "download zlib"
+curl -L http://zlib.net/zlib-1.2.7.tar.gz -o /tmp/zlib-1.2.7.tar.gz
+# echo "downloading pecl zip extension"
+# curl -L http://pecl.php.net/get/zip-1.10.2.tgz -o /tmp/zip-1.10.2.tgz
 
 # tar -C /tmp -xzf /tmp/libmcrypt-2.5.7.tar.gz
 # tar -C /tmp -xzf /tmp/cyrus-sasl-2.1.25.tar.gz
@@ -54,19 +58,26 @@ mv /tmp/httpd-2.4.3/srclib/apr-1.4.6 /tmp/httpd-2.4.3/srclib/apr
 tar -C /tmp/httpd-2.4.3/srclib -xzf /tmp/apr-util-1.5.1.tar.gz
 mv /tmp/httpd-2.4.3/srclib/apr-util-1.5.1 /tmp/httpd-2.4.3/srclib/apr-util
 
-tar -C /tmp -xzf /tmp/php-5.4.8.tar.gz
+tar -C /tmp -xzf /tmp/php-5.4.9.tar.gz
 tar -C /tmp -xzf /tmp/memcached-2.1.0.tgz
+tar -C /tmp -xzf /tmp/zlib-1.2.7.tar.gz
+# tar -C /tmp -xzf /tmp/zip-1.10.2.tgz
 
 export CFLAGS='-g0 -O2 -s -m64 -march=core2 -mtune=generic -pipe '
 export CXXFLAGS="${CFLAGS}"
 export CPPFLAGS="-I/app/local/include"
 export LD_LIBRARY_PATH="/app/local/lib"
-export MAKEFLAGS="-j5"
-export MAKE_CMD="/usr/bin/make $MAKEFLAGS"
+# export MAKEFLAGS="-j5"
+# export MAKE_CMD="/usr/bin/make $MAKEFLAGS"
+export MAKE_CMD="/usr/bin/make"
 
 # cd /tmp/libmcrypt-2.5.7
 # ./configure --prefix=/app/local --disable-posix-threads --enable-dynamic-loading --enable-static-link
 # ${MAKE_CMD} && ${MAKE_CMD} install
+
+cd /tmp/zlib-1.2.7
+./configure --prefix=/app/local --64
+${MAKE_CMD} && ${MAKE_CMD} install
 
 cd /tmp/pcre-8.31
 ./configure --prefix=/app/local --enable-jit --enable-utf8
@@ -83,8 +94,8 @@ patch -p1 < debian/patches/byte-compile-against-apache24.diff
 sed -e "s%/usr/local/apache2%/app/apache%" Makefile.AP2 > Makefile
 ${MAKE_CMD} && ${MAKE_CMD} install
 
-cd /tmp/php-5.4.8
-./configure --prefix=/app/php --with-mysql=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv --with-gd --with-curl=/usr/lib --with-config-file-path=/app/php --enable-soap=shared --with-openssl --enable-mbstring --with-mhash --enable-mysqlnd --with-pear --with-mysqli=mysqlnd --with-jpeg-dir --with-png-dir --with-mcrypt=/app/local --enable-static --enable-fpm --with-pcre-dir=/app/local --disable-cgi
+cd /tmp/php-5.4.9
+./configure --prefix=/app/php --with-mysql=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv --with-gd --with-curl=/usr/lib --with-config-file-path=/app/php --enable-soap=shared --with-openssl --enable-mbstring --with-mhash --enable-mysqlnd --with-pear --with-mysqli=mysqlnd --with-jpeg-dir --with-png-dir --with-mcrypt=/app/local --enable-static --enable-fpm --with-pcre-dir=/app/local --disable-cgi --enable-zip
 ${MAKE_CMD}
 ${MAKE_CMD} install
 
@@ -114,8 +125,13 @@ cd /tmp/memcached-2.1.0
   --enable-static
 ${MAKE_CMD} && ${MAKE_CMD} install
 
+# cd /tmp/zip-1.10.2
+# /app/php/bin/phpize
+# ./configure --prefix=/app/php --with-php-config=/app/php/bin/php-config --enable-static
+# ${MAKE_CMD} && ${MAKE_CMD} install
+
 echo '2.4.3' > /app/apache/VERSION
-echo '5.4.8' > /app/php/VERSION
+echo '5.4.9' > /app/php/VERSION
 mkdir /tmp/build
 mkdir /tmp/build/local
 mkdir /tmp/build/local/lib
