@@ -7,11 +7,11 @@ set -e
 # config
 APACHE_VERSION="2.4.3"
 APACHE_PATH="apache"
-PHP_VERSION="5.4.8"
+PHP_VERSION="5.4.9"
 PHP_PATH="php"
-BUILDPACK_VERSION="2.0-a4"
+BUILDPACK_VERSION="2.0-a5"
 BP_URL="https://s3.amazonaws.com/licorice-labs-buildpacks/apache-$APACHE_VERSION-php-$PHP_VERSION-v$BUILDPACK_VERSION.tar.gz"
-OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/b8bace2a-2a8e-4441-acc3-eb8e6ad608a5"
+OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/a148138a-6cbd-4f19-96b9-e283d29edb7e"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
