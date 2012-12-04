@@ -91,12 +91,12 @@ EOF
 chmod +x boot.sh
 
 # run a post build script from the app
-if [ -d /app/www/.hooks ]; then
-  if [ -f /app/www/.hooks/build.sh ]; then
-      chmod 0755 /app/www/.hooks/build.sh
+if [ -d $BUILD_DIR/www/.hooks ]; then
+  if [ -f $BUILD_DIR/www/.hooks/build.sh ]; then
+      chmod 0755 $BUILD_DIR/www/.hooks/build.sh
       # run once, delete so we don't run it on subsequent dyno starts
-      /usr/bin/env bash /app/www/.hooks/build.sh
-      rm /app/www/.hooks/build.sh
+      /usr/bin/env bash $BUILD_DIR/www/.hooks/build.sh
+      rm $BUILD_DIR/www/.hooks/build.sh
   fi
 fi
 
