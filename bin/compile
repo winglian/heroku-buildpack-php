@@ -21,6 +21,7 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 # include .files when moving things around
 shopt -s dotglob
 
+echo "Build dir is $BUILD_DIR"
 cd $BUILD_DIR
 
 # move app things to www
