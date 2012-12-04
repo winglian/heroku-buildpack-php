@@ -9,7 +9,7 @@ APACHE_VERSION="2.4.3"
 APACHE_PATH="apache"
 PHP_VERSION="5.4.9"
 PHP_PATH="php"
-BUILDPACK_VERSION="2.0-a5"
+BUILDPACK_VERSION="2.0-a6"
 BP_URL="https://s3.amazonaws.com/licorice-labs-buildpacks/apache-$APACHE_VERSION-php-$PHP_VERSION-v$BUILDPACK_VERSION.tar.gz"
 OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/a148138a-6cbd-4f19-96b9-e283d29edb7e"
 
@@ -28,7 +28,7 @@ mkdir -p $CACHE_DIR/www
 mv * $CACHE_DIR/www
 mv $CACHE_DIR/www .
 
-# keep Procfile
+# move Procfile back to where it is expected
 if [ -f www/Procfile ]; then
   mv www/Procfile .
 fi
@@ -44,7 +44,7 @@ cp $LP_DIR/conf/php-fpm.conf $BUILD_DIR/php/etc/
 
 # make php available on bin
 mkdir -p bin
-ln -s /app/php/bin/php bin/php
+ln -s $BUILD_DIR/php/bin/php $BUILD_DIR/bin/php
 
 export LD_LIBRARY_PATH=$BUILD_DIR/local/lib
 
@@ -70,7 +70,7 @@ touch /app/apache/logs/access_log
 tail -F /app/apache/logs/error_log &
 tail -F /app/apache/logs/access_log &
 export LD_LIBRARY_PATH=/app/local/lib
-export PHP_INI_SCAN_DIR=/app/www
+export PHP_INI_SCAN_DIR=/app/php
 
 # let's check for hook scripts
 if [ -d www/.hooks ]; then
@@ -89,6 +89,16 @@ exec /app/apache/bin/httpd -DNO_DETACH
 EOF
 
 chmod +x boot.sh
+
+# run a post build script from the app
+if [ -d /app/www/.hooks ]; then
+  if [ -f /app/www/.hooks/build.sh ]; then
+      chmod +x /app/www/.hooks/build.sh
+      # run once, delete so we don't run it on subsequent dyno starts
+      /bin/bash /app/www/.hooks/build.sh
+      rm /app/www/.hooks/build.sh
+  fi
+fi
 
 # clean the cache
 rm -rf $CACHE_DIR/*
