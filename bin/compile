@@ -91,6 +91,9 @@ EOF
 
 chmod +x boot.sh
 
+# clean the cache
+rm -rf $CACHE_DIR/*
+
 # run a post build script from the app
 if [ -d $BUILD_DIR/www/.hooks ]; then
   if [ -f $BUILD_DIR/www/.hooks/build.sh ]; then
@@ -101,5 +104,3 @@ if [ -d $BUILD_DIR/www/.hooks ]; then
   fi
 fi
 
-# clean the cache
-rm -rf $CACHE_DIR/*
