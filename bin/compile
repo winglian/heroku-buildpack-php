@@ -9,7 +9,7 @@ APACHE_VERSION="2.4.3"
 APACHE_PATH="apache"
 PHP_VERSION="5.4.9"
 PHP_PATH="php"
-BUILDPACK_VERSION="2.0-a6"
+BUILDPACK_VERSION="2.0-a7"
 BP_URL="https://s3.amazonaws.com/licorice-labs-buildpacks/apache-$APACHE_VERSION-php-$PHP_VERSION-v$BUILDPACK_VERSION.tar.gz"
 OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/a148138a-6cbd-4f19-96b9-e283d29edb7e"
 
@@ -68,8 +68,12 @@ for var in \`env|cut -f1 -d=\`; do
 done
 touch /app/apache/logs/error_log
 touch /app/apache/logs/access_log
+export PHP_ERROR_LOG=\`/app/php/bin/php -i | grep error_log | awk '{print \$5}'\`
+touch \$PHP_ERROR_LOG
+chmod 0777 \$PHP_ERROR_LOG
 tail -F /app/apache/logs/error_log &
 tail -F /app/apache/logs/access_log &
+tail -F \$PHP_ERROR_LOG &
 export LD_LIBRARY_PATH=/app/local/lib
 # export PHP_INI_SCAN_DIR=/app/php
 
