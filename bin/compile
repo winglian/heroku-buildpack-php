@@ -43,9 +43,11 @@ cp $LP_DIR/conf/httpd.conf $APACHE_PATH/conf
 cp $LP_DIR/conf/php.ini php
 cp $LP_DIR/conf/php-fpm.conf $BUILD_DIR/php/etc/
 
-# make php available on bin
-mkdir -p bin
-ln -s $BUILD_DIR/php/bin/php $BUILD_DIR/bin/php
+# make php available on bin wtih symbolic link, use relative path so it works when remounted
+mkdir bin
+cd bin
+ln -s ../php/bin/php php
+cd ..
 
 export LD_LIBRARY_PATH=$BUILD_DIR/local/lib
 
@@ -78,11 +80,15 @@ export LD_LIBRARY_PATH=/app/local/lib
 # export PHP_INI_SCAN_DIR=/app/php
 
 # let's check for hook scripts
+# .hooks will be DEPRECATED soon in favor of .heroku
 if [ -d www/.hooks ]; then
   for file in www/.hooks/*.sh; do
-    if [ -f \$file ]; then
-      /bin/bash \$file
-    fi
+    /bin/bash \$file
+  done
+fi
+if [ -d www/.heroku ]; then
+  for file in www/.heroku/*.sh; do
+    /bin/bash \$file
   done
 fi
 
@@ -99,12 +105,15 @@ chmod +x boot.sh
 rm -rf $CACHE_DIR/*
 
 # run a post build script from the app
-if [ -d $BUILD_DIR/www/.hooks ]; then
-  if [ -f $BUILD_DIR/www/.hooks/build.sh ]; then
-      chmod 0755 $BUILD_DIR/www/.hooks/build.sh
-      # run once, delete so we don't run it on subsequent dyno starts
-      /usr/bin/env bash $BUILD_DIR/www/.hooks/build.sh
-      rm $BUILD_DIR/www/.hooks/build.sh
-  fi
+# .hooks will be DEPRECATED soon in favor of .heroku
+if [ -d $BUILD_DIR/www/.hooks -a -f $BUILD_DIR/www/.hooks/build.sh ]; then
+    chmod 0755 $BUILD_DIR/www/.hooks/build.sh
+    /usr/bin/env bash $BUILD_DIR/www/.hooks/build.sh
+    rm $BUILD_DIR/www/.hooks/build.sh
 fi
 
+if [ -d $BUILD_DIR/www/.heroku -a -f $BUILD_DIR/www/.heroku/compile.sh ]; then
+    chmod 0755 $BUILD_DIR/www/.heroku/compile.sh
+    /usr/bin/env bash $BUILD_DIR/www/.heroku/compile.sh
+    rm $BUILD_DIR/www/.heroku/compile.sh
+fi
