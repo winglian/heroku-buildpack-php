@@ -28,9 +28,9 @@ export APACHE_MIRROR_HOST="http://apache.mirrors.tds.net"
 # curl -L ftp://mcrypt.hellug.gr/pub/crypto/mcrypt/libmcrypt/libmcrypt-2.5.7.tar.gz -o /tmp/libmcrypt-2.5.7.tar.gz
 # curl -L ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/cyrus-sasl-2.1.25.tar.gz -o /tmp/cyrus-sasl-2.1.25.tar.gz
 echo "downloading libmemcached"
-curl -L https://launchpad.net/libmemcached/1.0/1.0.13/+download/libmemcached-1.0.13.tar.gz -o /tmp/libmemcached-1.0.13.tar.gz
+curl -L https://launchpad.net/libmemcached/1.0/1.0.16/+download/libmemcached-1.0.16.tar.gz -o /tmp/libmemcached-1.0.16.tar.gz
 echo "downloading PCRE"
-curl -L ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.31.tar.gz -o /tmp/pcre-8.31.tar.gz
+curl -L ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.32.tar.gz -o /tmp/pcre-8.32.tar.gz
 echo "downloading apr"
 curl -L ${APACHE_MIRROR_HOST}/apr/apr-1.4.6.tar.gz -o /tmp/apr-1.4.6.tar.gz
 echo "downloading apr-util"
@@ -38,7 +38,7 @@ curl -L ${APACHE_MIRROR_HOST}/apr/apr-util-1.5.1.tar.gz -o /tmp/apr-util-1.5.1.t
 echo "downloading httpd"
 curl -L ${APACHE_MIRROR_HOST}/httpd/httpd-2.4.3.tar.gz -o /tmp/httpd-2.4.3.tar.gz
 echo "downloading php"
-curl -L http://us.php.net/get/php-5.4.9.tar.gz/from/us2.php.net/mirror -o /tmp/php-5.4.9.tar.gz
+curl -L http://us.php.net/get/php-5.4.11.tar.gz/from/us2.php.net/mirror -o /tmp/php-5.4.11.tar.gz
 echo "downloading pecl-memcached"
 curl -L http://pecl.php.net/get/memcached-2.1.0.tgz -o /tmp/memcached-2.1.0.tgz
 echo "download zlib"
@@ -48,8 +48,8 @@ curl -L http://zlib.net/zlib-1.2.7.tar.gz -o /tmp/zlib-1.2.7.tar.gz
 
 # tar -C /tmp -xzf /tmp/libmcrypt-2.5.7.tar.gz
 # tar -C /tmp -xzf /tmp/cyrus-sasl-2.1.25.tar.gz
-tar -C /tmp -xzf /tmp/libmemcached-1.0.13.tar.gz
-tar -C /tmp -xzf /tmp/pcre-8.31.tar.gz
+tar -C /tmp -xzf /tmp/libmemcached-1.0.16.tar.gz
+tar -C /tmp -xzf /tmp/pcre-8.32.tar.gz
 tar -C /tmp -xzf /tmp/httpd-2.4.3.tar.gz
 
 tar -C /tmp/httpd-2.4.3/srclib -xzf /tmp/apr-1.4.6.tar.gz
@@ -58,7 +58,7 @@ mv /tmp/httpd-2.4.3/srclib/apr-1.4.6 /tmp/httpd-2.4.3/srclib/apr
 tar -C /tmp/httpd-2.4.3/srclib -xzf /tmp/apr-util-1.5.1.tar.gz
 mv /tmp/httpd-2.4.3/srclib/apr-util-1.5.1 /tmp/httpd-2.4.3/srclib/apr-util
 
-tar -C /tmp -xzf /tmp/php-5.4.9.tar.gz
+tar -C /tmp -xzf /tmp/php-5.4.11.tar.gz
 tar -C /tmp -xzf /tmp/memcached-2.1.0.tgz
 tar -C /tmp -xzf /tmp/zlib-1.2.7.tar.gz
 # tar -C /tmp -xzf /tmp/zip-1.10.2.tgz
@@ -68,36 +68,36 @@ export CXXFLAGS="${CFLAGS}"
 export CPPFLAGS="-I/app/local/include"
 export LD_LIBRARY_PATH="/app/local/lib"
 # export MAKEFLAGS="-j5"
-# export MAKE_CMD="/usr/bin/make $MAKEFLAGS"
-export MAKE_CMD="/usr/bin/make"
+# export MAKE="/usr/bin/make $MAKEFLAGS"
+export MAKE="/usr/bin/make"
 
 # cd /tmp/libmcrypt-2.5.7
 # ./configure --prefix=/app/local --disable-posix-threads --enable-dynamic-loading --enable-static-link
-# ${MAKE_CMD} && ${MAKE_CMD} install
+# ${MAKE} && ${MAKE} install
 
 cd /tmp/zlib-1.2.7
 ./configure --prefix=/app/local --64
-${MAKE_CMD} && ${MAKE_CMD} install
+${MAKE} && ${MAKE} install
 
-cd /tmp/pcre-8.31
+cd /tmp/pcre-8.32
 ./configure --prefix=/app/local --enable-jit --enable-utf8
-${MAKE_CMD} && ${MAKE_CMD} install
+${MAKE} && ${MAKE} install
 
 cd /tmp/httpd-2.4.3
 ./configure --prefix=/app/apache --enable-rewrite --enable-so --enable-deflate --enable-expires --enable-headers --enable-proxy-fcgi --with-mpm=event --with-included-apr --with-pcre=/app/local
-${MAKE_CMD} && ${MAKE_CMD} install
+${MAKE} && ${MAKE} install
 
 cd /tmp
 git clone git://github.com/ByteInternet/libapache-mod-fastcgi.git
 cd /tmp/libapache-mod-fastcgi/
 patch -p1 < debian/patches/byte-compile-against-apache24.diff 
 sed -e "s%/usr/local/apache2%/app/apache%" Makefile.AP2 > Makefile
-${MAKE_CMD} && ${MAKE_CMD} install
+${MAKE} && ${MAKE} install
 
-cd /tmp/php-5.4.9
+cd /tmp/php-5.4.11
 ./configure --prefix=/app/php --with-mysql=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv --with-gd --with-curl=/usr/lib --with-config-file-path=/app/php --enable-soap=shared --with-openssl --enable-mbstring --with-mhash --enable-mysqlnd --with-pear --with-mysqli=mysqlnd --with-jpeg-dir --with-png-dir --with-mcrypt=/app/local --enable-static --enable-fpm --with-pcre-dir=/app/local --disable-cgi --enable-zip
-${MAKE_CMD}
-${MAKE_CMD} install
+${MAKE}
+${MAKE} install
 
 /app/php/bin/pear config-set php_dir /app/php
 echo " " | /app/php/bin/pecl install memcache
@@ -106,14 +106,14 @@ echo " " | /app/php/bin/pecl install apc-3.1.13
 
 # cd /tmp/cyrus-sasl-2.1.25
 # ./configure --prefix=/app/local
-# ${MAKE_CMD} && ${MAKE_CMD} install
+# ${MAKE} && ${MAKE} install
 # export SASL_PATH=/app/local/lib/sasl2
 
-cd /tmp/libmemcached-1.0.13
+cd /tmp/libmemcached-1.0.16
 ./configure --prefix=/app/local
 # the configure script detects sasl, but is still foobar'ed
 # sed -i 's/LIBMEMCACHED_WITH_SASL_SUPPORT 0/LIBMEMCACHED_WITH_SASL_SUPPORT 1/' Makefile
-${MAKE_CMD} && ${MAKE_CMD} install
+${MAKE} && ${MAKE} install
 
 cd /tmp/memcached-2.1.0
 /app/php/bin/phpize
@@ -123,15 +123,15 @@ cd /tmp/memcached-2.1.0
   --enable-memcached-json \
   --with-php-config=/app/php/bin/php-config \
   --enable-static
-${MAKE_CMD} && ${MAKE_CMD} install
+${MAKE} && ${MAKE} install
 
 # cd /tmp/zip-1.10.2
 # /app/php/bin/phpize
 # ./configure --prefix=/app/php --with-php-config=/app/php/bin/php-config --enable-static
-# ${MAKE_CMD} && ${MAKE_CMD} install
+# ${MAKE} && ${MAKE} install
 
 echo '2.4.3' > /app/apache/VERSION
-echo '5.4.9' > /app/php/VERSION
+echo '5.4.11' > /app/php/VERSION
 mkdir /tmp/build
 mkdir /tmp/build/local
 mkdir /tmp/build/local/lib
