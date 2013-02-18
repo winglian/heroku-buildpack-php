@@ -56,6 +56,17 @@ slug_id=$(php/bin/php -r "echo md5(uniqid('', TRUE));")
 echo $slug_id > SLUG_ID
 echo "Creating Slug Identifier file with id: ${slug_id}"
 
+echo "Installing Composer binary"
+curl -s https://getcomposer.org/installer | $BUILD_DIR/bin/php -- --install-dir=bin
+mv bin/composer.phar bin/composer
+
+if [ -f $BUILD_DIR/www/composer.json ]; then
+  echo "Installing Composer dependencies"
+  cd $BUILD_DIR/www
+  $BUILD_DIR/bin/php $BUILD_DIR/bin/composer install --prefer-dist
+  cd $BUILD_DIR
+fi
+
 cat >>boot.sh <<EOF
 echo "Checking for WWWROOT environment variable..."
 if [ -n "\${WWWROOT:+x}" ]; then
