@@ -70,7 +70,7 @@ fi
 cat >>boot.sh <<EOF
 echo "Checking for WWWROOT environment variable..."
 if [ -n "\${WWWROOT:+x}" ]; then
-  sed -ie "s%/app/www%/app/www\$WWWROOT%" /app/apache/conf/httpd.conf
+  sed -ie "s%/app/www[^\\"]*%/app/www\$WWWROOT%" /app/apache/conf/httpd.conf
 fi
 
 export HW_ADDR=\`/sbin/ifconfig eth0 | grep HWaddr | awk '{print \$5}'\`
