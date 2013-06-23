@@ -10,8 +10,7 @@ APACHE_PATH="apache"
 PHP_VERSION="5.4.11"
 PHP_PATH="php"
 BUILDPACK_VERSION="2.0-a7"
-BP_URL="https://s3.amazonaws.com/licorice-labs-buildpacks/apache-$APACHE_VERSION-php-$PHP_VERSION-v$BUILDPACK_VERSION.tar.gz"
-OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/f6d6680f-68ee-4153-a8ab-75ce8687c98c"
+OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/11277de2-7545-4e98-b8af-a4ff6d7e99ac"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
