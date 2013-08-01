@@ -3,8 +3,8 @@ Apache+PHP build pack
 
 This is a build pack bundling PHP and Apache for Heroku apps.
 
-* PHP 5.5.0
-* Apache HTTP Server 2.4.3
+* PHP 5.5.1
+* Apache HTTP Server 2.4.6
 
 Configuration
 -------------
