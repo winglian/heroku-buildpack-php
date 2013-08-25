@@ -38,7 +38,7 @@ curl -L ${APACHE_MIRROR_HOST}/apr/apr-util-1.5.2.tar.gz -o /tmp/apr-util-1.5.2.t
 echo "downloading httpd"
 curl -L ${APACHE_MIRROR_HOST}/httpd/httpd-2.4.6.tar.gz -o /tmp/httpd-2.4.6.tar.gz
 echo "downloading php"
-curl -L http://us.php.net/get/php-5.5.2.tar.gz/from/us2.php.net/mirror -o /tmp/php-5.5.2.tar.gz
+curl -L http://us.php.net/get/php-5.5.3.tar.gz/from/us2.php.net/mirror -o /tmp/php-5.5.3.tar.gz
 echo "downloading pecl-memcached"
 curl -L http://pecl.php.net/get/memcached-2.1.0.tgz -o /tmp/memcached-2.1.0.tgz
 echo "download zlib"
@@ -58,7 +58,7 @@ mv /tmp/httpd-2.4.6/srclib/apr-1.4.6 /tmp/httpd-2.4.6/srclib/apr
 tar -C /tmp/httpd-2.4.6/srclib -xzf /tmp/apr-util-1.5.2.tar.gz
 mv /tmp/httpd-2.4.6/srclib/apr-util-1.5.2 /tmp/httpd-2.4.6/srclib/apr-util
 
-tar -C /tmp -xzf /tmp/php-5.5.2.tar.gz
+tar -C /tmp -xzf /tmp/php-5.5.3.tar.gz
 tar -C /tmp -xzf /tmp/memcached-2.1.0.tgz
 tar -C /tmp -xzf /tmp/zlib-1.2.8.tar.gz
 # tar -C /tmp -xzf /tmp/zip-1.10.2.tgz
@@ -94,7 +94,7 @@ patch -p1 < debian/patches/byte-compile-against-apache24.diff
 sed -e "s%/usr/local/apache2%/app/apache%" Makefile.AP2 > Makefile
 ${MAKE} && ${MAKE} install
 
-cd /tmp/php-5.5.2
+cd /tmp/php-5.5.3
 ./configure --prefix=/app/php --with-mysql=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv --with-gd --with-curl=/usr/lib --with-config-file-path=/app/php --enable-soap=shared --with-openssl --enable-mbstring --with-mhash --enable-mysqlnd --with-pear --with-mysqli=mysqlnd --with-jpeg-dir --with-png-dir --with-mcrypt=/app/local --enable-static --enable-fpm --with-pcre-dir=/app/local --disable-cgi --enable-zip
 ${MAKE}
 ${MAKE} install
@@ -131,7 +131,7 @@ ${MAKE} && ${MAKE} install
 # ${MAKE} && ${MAKE} install
 
 echo '2.4.6' > /app/apache/VERSION
-echo '5.5.2' > /app/php/VERSION
+echo '5.5.3' > /app/php/VERSION
 mkdir /tmp/build
 mkdir /tmp/build/local
 mkdir /tmp/build/local/lib

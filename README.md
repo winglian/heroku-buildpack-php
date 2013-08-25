@@ -3,8 +3,9 @@ Apache+PHP build pack
 
 This is a build pack bundling PHP and Apache for Heroku apps.
 
-* PHP 5.5.2
+* PHP 5.5.3
 * Apache HTTP Server 2.4.6
+* Composer Support
 
 Configuration
 -------------
@@ -21,6 +22,11 @@ Configure Heroku to use this buildpack repo AND branch
 This buildpack also supports custom Document Roots in your application. Simply add an environment variable. If your document root is public in the root of your repo, then run
     
     heroku config:set WWWROOT=/public
+
+Composer
+--------
+
+Composer support is built in. Simpy drop your composer.json into the root of your repository the buildpack will automatically install the requirements and dependencies.
 
 Pre-compiling binaries
 ----------------------
