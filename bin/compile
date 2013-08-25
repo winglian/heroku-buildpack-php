@@ -7,10 +7,10 @@ set -e
 # config
 APACHE_VERSION="2.4.6"
 APACHE_PATH="apache"
-PHP_VERSION="5.5.2"
+PHP_VERSION="5.5.3"
 PHP_PATH="php"
 BUILDPACK_VERSION="2.0-a7"
-OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/f16f0d12-8e56-439a-a419-5407e18cc5c3"
+OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/3ab52c5f-d762-4d26-88ec-0410e0cb57bc"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
