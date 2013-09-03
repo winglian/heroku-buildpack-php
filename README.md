@@ -11,6 +11,8 @@ This is a build pack bundling PHP and Apache for Heroku apps.
 * PECL Memcached
 * GD support
 * igbinary support
+* mcrypt support (to support Laravel 4)
+* PostgreSQL support
 
 Configuration
 -------------
