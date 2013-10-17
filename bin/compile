@@ -9,7 +9,7 @@ APACHE_VERSION="2.4.6"
 APACHE_PATH="apache"
 PHP_VERSION="5.5.3"
 PHP_PATH="php"
-BUILDPACK_VERSION="2.0-a7"
+BUILDPACK_VERSION="2.0-a8"
 OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/1b0ad49e-b0e4-46d5-b88a-541bc8fdee3f"
 
 BIN_DIR=$(dirname $0)
@@ -49,11 +49,32 @@ ln -s ../php/bin/php php
 cd ..
 
 export LD_LIBRARY_PATH=$BUILD_DIR/local/lib
+export PATH=$PATH:$BUILD_DIR/bin
 
 # set a slug_id identifier
 slug_id=$(php/bin/php -r "echo md5(uniqid('', TRUE));")
 echo $slug_id > SLUG_ID
 echo "Creating Slug Identifier file with id: ${slug_id}"
+
+# Determine if an SSH bundle including ssh keys etc is included so we can access private composer repos
+# Create your bundle with 
+# tar -czv .ssh | openssl enc -out ssh_bundle_enc -e -k $SSH_BUNDLE_PASSWORD -aes-128-cbc
+# the bundle's config should include directives for
+# StrictHostKeyChecking no
+# UserKnownHostsFile=/dev/null
+if [[ -n "$SSH_BUNDLE_URL" && -n "$SSH_BUNDLE_PASSWORD" ]]; then
+    cd ~
+    # download the bundle
+    curl --silent --max-time 60 --location "$SSH_BUNDLE_URL" -o ssh_bundle_enc
+    # decrypt the bundle
+    openssl enc -in ssh_bundle_enc -d -k $SSH_BUNDLE_PASSWORD -aes-128-cbc > ssh_bundle.tar.gz
+    # extract the bundle
+    tar -xzf ssh_bundle.tar.gz
+    # cleanup
+    rm ssh_bundle_enc
+    rm ssh_bundle.tar.gz
+    cd $BUILD_DIR
+fi
 
 echo "Installing Composer binary"
 curl -s https://getcomposer.org/installer | $BUILD_DIR/bin/php -- --install-dir=bin
@@ -62,8 +83,13 @@ mv bin/composer.phar bin/composer
 if [ -f $BUILD_DIR/www/composer.json ]; then
   echo "Installing Composer dependencies"
   cd $BUILD_DIR/www
+  $BUILD_DIR/bin/php $BUILD_DIR/bin/composer config -g github-protocols https
   $BUILD_DIR/bin/php $BUILD_DIR/bin/composer install --prefer-dist
   cd $BUILD_DIR
+fi
+
+if [ -d ~/.ssh ]; then
+    rm -rf ~/.ssh
 fi
 
 cat >>boot.sh <<EOF
