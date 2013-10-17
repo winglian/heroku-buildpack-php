@@ -56,8 +56,7 @@ This buildpack now supports private repositories. You should create a new ssh ke
     EOF
     $ tar -czv .ssh | openssl enc -out ssh_bundle_enc -e -k $SSH_BUNDLE_PASSWORD -aes-128-cbc
 
-Upload ssh_bundle_enc to either S3 or save to a public git repo.
-Allow authentication with /tmp/.ssh/id_rsa.pub to your private repository
+You will then need to upload ssh_bundle_enc to either S3 or save to a public git repo and allow authentication with /tmp/.ssh/id_rsa.pub to your private repository
 
     $ cd -
     $ heroku config:set SSH_BUNDLE_URL="http://s3.amazonaws.com/bucket/{path to folder containing ssh_bundle_enc}/ssh_bundle_enc"
