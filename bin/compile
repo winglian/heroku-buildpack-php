@@ -84,7 +84,7 @@ if [ -f $BUILD_DIR/www/composer.json ]; then
   echo "Installing Composer dependencies"
   cd $BUILD_DIR/www
   $BUILD_DIR/bin/php $BUILD_DIR/bin/composer config -g github-protocols https
-  $BUILD_DIR/bin/php $BUILD_DIR/bin/composer install --prefer-dist
+  $BUILD_DIR/bin/php $BUILD_DIR/bin/composer install --prefer-dist --no-dev --optimize-autoloader
   cd $BUILD_DIR
 fi
 
