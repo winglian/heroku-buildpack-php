@@ -4,8 +4,8 @@ Apache+PHP build pack
 This is a build pack bundling PHP and Apache for Heroku apps.
 
 **Features:**
-* PHP 5.5.4 (PHP-FPM)
-* Apache HTTP Server 2.4.6
+* PHP 5.5.9 (PHP-FPM)
+* Apache HTTP Server 2.4.7
 * Composer Support
 * Opcache Enabled
 * PECL Memcached
