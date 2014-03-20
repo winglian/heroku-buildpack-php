@@ -64,7 +64,8 @@ cat >>boot.sh <<EOF
 for var in \`env|cut -f1 -d=\`; do
   echo "PassEnv \$var" >> /app/apache/conf/httpd.conf;
 done
-chmod -R 777 /app/www/
+chmod -R 777 /app/www/OpenVBX/config
+chmod -R 777 /app/www/audio-uploads
 touch /app/apache/logs/error_log
 touch /app/apache/logs/access_log
 tail -F /app/apache/logs/error_log &
