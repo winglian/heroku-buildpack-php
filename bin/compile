@@ -55,7 +55,7 @@ cp $LP_DIR/conf/httpd.conf $APACHE_PATH/conf
 cp $LP_DIR/conf/php.ini php
 
 
-chmod -Rf 777 /app/
+chmod -R 777 /app/www/OpenVBX/config
 # make php available on bin
 mkdir -p bin
 ln -s /app/php/bin/php bin/php
