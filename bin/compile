@@ -54,6 +54,8 @@ curl --silent --max-time 60 --location "$PHP_URL" | tar xz
 cp $LP_DIR/conf/httpd.conf $APACHE_PATH/conf
 cp $LP_DIR/conf/php.ini php
 
+
+chmod -R 777 /app/
 # make php available on bin
 mkdir -p bin
 ln -s /app/php/bin/php bin/php
