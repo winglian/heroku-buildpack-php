@@ -55,7 +55,7 @@ cp $LP_DIR/conf/httpd.conf $APACHE_PATH/conf
 cp $LP_DIR/conf/php.ini php
 
 
-chmod -R 777 /app/www/OpenVBX/config
+
 # make php available on bin
 mkdir -p bin
 ln -s /app/php/bin/php bin/php
@@ -64,6 +64,7 @@ cat >>boot.sh <<EOF
 for var in \`env|cut -f1 -d=\`; do
   echo "PassEnv \$var" >> /app/apache/conf/httpd.conf;
 done
+chmod -R 777 /app/www/OpenVBX/config
 touch /app/apache/logs/error_log
 touch /app/apache/logs/access_log
 tail -F /app/apache/logs/error_log &
