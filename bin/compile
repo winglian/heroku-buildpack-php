@@ -5,12 +5,12 @@
 set -e
 
 # config
-APACHE_VERSION="2.4.7"
+APACHE_VERSION="2.4.9"
 APACHE_PATH="apache"
-PHP_VERSION="5.5.9"
+PHP_VERSION="5.5.11"
 PHP_PATH="php"
-BUILDPACK_VERSION="2.0-rc1"
-OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/e33fbffa-c4ca-4752-8b1c-9ebc49366a1c"
+BUILDPACK_VERSION="2.0-rc2"
+OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/95ee1f8b-46fa-4ef7-a99f-92d6e03ed8d2"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
@@ -93,6 +93,7 @@ if [ -d ~/.ssh ]; then
 fi
 
 cat >>boot.sh <<EOF
+export PATH=/app/bin:\$PATH
 echo "Checking for WWWROOT environment variable..."
 if [ -n "\${WWWROOT:+x}" ]; then
   sed -ie "s%/app/www[^\\"]*%/app/www\$WWWROOT%" /app/apache/conf/httpd.conf
